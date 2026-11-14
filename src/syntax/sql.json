@@ -1,0 +1,21 @@
+{
+  "caseInsensitive": true,
+  "lineComments": [
+    "--"
+  ],
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "'",
+      "close": "'"
+    }
+  ],
+  "keywords": "add all alter and as asc begin between by case check column commit constraint create cross database default delete desc distinct drop else end exists foreign from full group having if in index inner insert into is join key left like limit not offset on or order outer primary references returning right rollback select set table then transaction union unique update values view when where with",
+  "types": "bigint blob boolean char date datetime decimal double float int integer json numeric real serial smallint text time timestamp uuid varchar",
+  "literals": "true false null"
+}

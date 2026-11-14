@@ -1,0 +1,25 @@
+{
+  "capitalTypes": true,
+  "sigils": "@$",
+  "lineComments": [
+    "#"
+  ],
+  "blockComments": [
+    [
+      "=begin",
+      "=end"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "keywords": "alias and begin break case class def defined? do else elsif end ensure extend for if in include module next not or private protected public raise redo require require_relative rescue retry return self super then undef unless until when while yield attr_accessor attr_reader attr_writer",
+  "literals": "true false nil"
+}

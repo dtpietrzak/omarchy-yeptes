@@ -1,0 +1,26 @@
+{
+  "preprocessor": true,
+  "lineComments": [
+    "//"
+  ],
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "keywords": "auto break case const continue default do else enum extern for goto if inline register restrict return sizeof static struct switch typedef union volatile while alignas alignof catch class concept consteval constexpr constinit const_cast co_await co_return co_yield decltype delete dynamic_cast explicit export final friend mutable namespace new noexcept operator override private protected public reinterpret_cast requires static_assert static_cast template this thread_local throw try typeid typename using virtual",
+  "types": "bool char double float int long short signed size_t ssize_t unsigned void int8_t int16_t int32_t int64_t uint8_t uint16_t uint32_t uint64_t char8_t char16_t char32_t wchar_t string vector map set",
+  "literals": "true false nullptr NULL",
+  "capitalTypes": true
+}

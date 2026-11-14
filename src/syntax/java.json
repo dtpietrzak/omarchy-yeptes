@@ -1,0 +1,30 @@
+{
+  "capitalTypes": true,
+  "lineComments": [
+    "//"
+  ],
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"\"\"",
+      "escape": "\\",
+      "multiline": true
+    },
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "keywords": "abstract assert break case catch class const continue default do else enum exports extends final finally for goto if implements import instanceof interface module native new non-sealed package permits private protected public record requires return sealed static strictfp super switch synchronized this throw throws transient try var volatile while yield",
+  "types": "boolean byte char double float int long short void",
+  "literals": "true false null"
+}

@@ -1,0 +1,27 @@
+{
+  "capitalTypes": true,
+  "sigils": "$",
+  "lineComments": [
+    "//",
+    "#"
+  ],
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "keywords": "abstract and as break case catch class clone const continue declare default do echo else elseif enum extends final finally fn for foreach function global if implements include include_once instanceof interface match namespace new or private protected public readonly require require_once return static switch throw trait try use var while yield",
+  "types": "array bool callable float int iterable mixed object string void",
+  "literals": "true false null"
+}

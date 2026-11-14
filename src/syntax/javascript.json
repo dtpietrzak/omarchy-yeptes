@@ -1,0 +1,29 @@
+{
+  "capitalTypes": true,
+  "lineComments": [
+    "//"
+  ],
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    },
+    {
+      "open": "`",
+      "escape": "\\",
+      "multiline": true
+    }
+  ],
+  "keywords": "async await break case catch class const continue debugger default delete do else export extends finally for from function get if import in instanceof let new of return set static super switch this throw try typeof var void while with yield",
+  "literals": "true false null undefined NaN Infinity"
+}

@@ -1,0 +1,18 @@
+{
+  "colonProperties": true,
+  "identifierExtras": "-",
+  "lineComments": [
+    "#"
+  ],
+  "strings": [
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "literals": "true false null yes no on off"
+}

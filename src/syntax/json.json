@@ -1,0 +1,19 @@
+{
+  "keyStrings": true,
+  "literals": "true false null",
+  "lineComments": [
+    "//"
+  ],
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"",
+      "escape": "\\"
+    }
+  ]
+}

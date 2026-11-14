@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Name=Yeptes
+Comment=A plain text notepad with Markdown, JSON, and HTML views
+Comment[da]=En notesblok til ren tekst med Markdown-, JSON- og HTML-visning
+Comment[de]=Ein Notizblock für reinen Text mit Markdown-, JSON- und HTML-Ansicht
+Comment[es]=Un bloc de notas de texto sin formato con vistas de Markdown, JSON y HTML
+Comment[fr]=Un bloc-notes en texte brut avec des vues Markdown, JSON et HTML
+Exec=yeptes open %f
+Icon=yeptes
+Terminal=false
+Categories=Utility;TextEditor;
+MimeType=text/x-yeptes;text/plain;text/markdown;application/json;text/html;
+StartupWMClass=yeptes

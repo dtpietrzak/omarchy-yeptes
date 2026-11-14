@@ -1,0 +1,28 @@
+{
+  "capitalTypes": true,
+  "lineComments": [
+    "//"
+  ],
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"\"\"",
+      "multiline": true
+    },
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "keywords": "abstract as break by catch class companion const constructor continue data do else enum final finally for fun if import in init inline interface internal is lateinit object open operator override package private protected public return sealed super suspend this throw try typealias val var when while",
+  "literals": "true false null"
+}

@@ -1,0 +1,10 @@
+{
+  "%n characters": {
+    "one": "%n character",
+    "other": "%n characters"
+  },
+  "%n items": {
+    "one": "%n item",
+    "other": "%n items"
+  }
+}

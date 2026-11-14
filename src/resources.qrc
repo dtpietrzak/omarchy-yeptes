@@ -1,0 +1,45 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="Main.qml">Main.qml</file>
+        <file alias="RenderedPage.qml">RenderedPage.qml</file>
+        <file alias="JsonTree.qml">JsonTree.qml</file>
+        <file alias="HelpOverlay.qml">HelpOverlay.qml</file>
+        <file alias="ConfirmOverlay.qml">ConfirmOverlay.qml</file>
+        <file alias="PlainButton.qml">PlainButton.qml</file>
+        <file alias="ViewMenu.qml">ViewMenu.qml</file>
+        <file alias="SettingsMenu.qml">SettingsMenu.qml</file>
+        <file alias="NotesPanel.qml">NotesPanel.qml</file>
+        <file alias="CsvTable.qml">CsvTable.qml</file>
+        <file alias="DiffList.qml">DiffList.qml</file>
+        <file alias="LanguageMenu.qml">LanguageMenu.qml</file>
+        <file alias="skill.md">skill.md</file>
+        <file alias="i18n/da.json">i18n/da.json</file>
+        <file alias="i18n/de.json">i18n/de.json</file>
+        <file alias="i18n/en.json">i18n/en.json</file>
+        <file alias="i18n/es.json">i18n/es.json</file>
+        <file alias="i18n/fr.json">i18n/fr.json</file>
+        <file alias="syntax/bash.json">syntax/bash.json</file>
+        <file alias="syntax/c.json">syntax/c.json</file>
+        <file alias="syntax/cpp.json">syntax/cpp.json</file>
+        <file alias="syntax/csharp.json">syntax/csharp.json</file>
+        <file alias="syntax/css.json">syntax/css.json</file>
+        <file alias="syntax/go.json">syntax/go.json</file>
+        <file alias="syntax/html.json">syntax/html.json</file>
+        <file alias="syntax/java.json">syntax/java.json</file>
+        <file alias="syntax/javascript.json">syntax/javascript.json</file>
+        <file alias="syntax/json.json">syntax/json.json</file>
+        <file alias="syntax/kotlin.json">syntax/kotlin.json</file>
+        <file alias="syntax/lua.json">syntax/lua.json</file>
+        <file alias="syntax/markdown.json">syntax/markdown.json</file>
+        <file alias="syntax/php.json">syntax/php.json</file>
+        <file alias="syntax/python.json">syntax/python.json</file>
+        <file alias="syntax/ruby.json">syntax/ruby.json</file>
+        <file alias="syntax/rust.json">syntax/rust.json</file>
+        <file alias="syntax/sql.json">syntax/sql.json</file>
+        <file alias="syntax/swift.json">syntax/swift.json</file>
+        <file alias="syntax/toml.json">syntax/toml.json</file>
+        <file alias="syntax/typescript.json">syntax/typescript.json</file>
+        <file alias="syntax/xml.json">syntax/xml.json</file>
+        <file alias="syntax/yaml.json">syntax/yaml.json</file>
+    </qresource>
+</RCC>

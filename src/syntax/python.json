@@ -1,0 +1,29 @@
+{
+  "capitalTypes": true,
+  "lineComments": [
+    "#"
+  ],
+  "strings": [
+    {
+      "open": "\"\"\"",
+      "escape": "\\",
+      "multiline": true
+    },
+    {
+      "open": "'''",
+      "escape": "\\",
+      "multiline": true
+    },
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "keywords": "and as assert async await break case class continue def del elif else except finally for from global if import in is lambda match nonlocal not or pass raise return try while with yield",
+  "types": "bool bytes complex dict float frozenset int list object set str tuple",
+  "literals": "True False None self cls"
+}

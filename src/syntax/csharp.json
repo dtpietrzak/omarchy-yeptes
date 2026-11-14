@@ -1,0 +1,30 @@
+{
+  "capitalTypes": true,
+  "preprocessor": true,
+  "lineComments": [
+    "//"
+  ],
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"\"\"",
+      "multiline": true
+    },
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "keywords": "abstract as async await base break case catch checked class const continue default delegate do else enum event explicit extern finally fixed for foreach get goto if implicit in init interface internal is lock namespace new operator out override params partial private protected public readonly record ref required return sealed set sizeof stackalloc static struct switch this throw try typeof unchecked unsafe using var virtual volatile when where while yield",
+  "types": "bool byte char decimal double dynamic float int long nint nuint object sbyte short string uint ulong ushort void",
+  "literals": "true false null"
+}

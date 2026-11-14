@@ -1,0 +1,26 @@
+{
+  "identifierExtras": "-",
+  "lineComments": [
+    "#",
+    ";"
+  ],
+  "strings": [
+    {
+      "open": "\"\"\"",
+      "escape": "\\",
+      "multiline": true
+    },
+    {
+      "open": "'''",
+      "multiline": true
+    },
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'"
+    }
+  ],
+  "literals": "true false inf nan"
+}

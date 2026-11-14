@@ -1,0 +1,22 @@
+{
+  "colonProperties": true,
+  "identifierExtras": "-",
+  "blockComments": [
+    [
+      "/*",
+      "*/"
+    ]
+  ],
+  "strings": [
+    {
+      "open": "\"",
+      "escape": "\\"
+    },
+    {
+      "open": "'",
+      "escape": "\\"
+    }
+  ],
+  "keywords": "important from to and not only",
+  "literals": "none auto inherit initial unset"
+}

@@ -1,0 +1,26 @@
+pkgname=yeptes
+pkgver=0.3.0
+pkgrel=1
+pkgdesc='A plain text notepad with Markdown, JSON, HTML, table, code, and diff views'
+url='https://github.com/dtpietrzak/yeptes'
+arch=('x86_64' 'aarch64')
+license=('MIT')
+depends=('hicolor-icon-theme' 'qt6-base' 'qt6-declarative' 'qt6-wayland' 'xdg-desktop-portal')
+makedepends=('gcc' 'make')
+source=()
+sha256sums=()
+
+build() {
+  cd "$startdir/.."
+  ./bin/build
+}
+
+package() {
+  cd "$startdir/.."
+  install -Dm755 build/yeptes "$pkgdir/usr/bin/yeptes"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$startdir/yeptes.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/yeptes.svg"
+  install -Dm644 "$startdir/yeptes.desktop" "$pkgdir/usr/share/applications/yeptes.desktop"
+  # Teaches the desktop that .ypts files are Yeptes notes.
+  install -Dm644 "$startdir/yeptes.xml" "$pkgdir/usr/share/mime/packages/yeptes.xml"
+}
