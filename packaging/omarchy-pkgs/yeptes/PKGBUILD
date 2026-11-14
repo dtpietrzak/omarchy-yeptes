@@ -3,9 +3,11 @@
 pkgname=yeptes
 pkgver=0.3.0
 pkgrel=1
+# The repository is omarchy-yeptes; the app and package are yeptes.
+_srcname=omarchy-yeptes
 pkgdesc='A plain text notepad with Markdown, JSON, HTML, table, code, and diff views'
 arch=('x86_64' 'aarch64')
-url='https://github.com/dtpietrzak/yeptes'
+url='https://github.com/dtpietrzak/omarchy-yeptes'
 license=('MIT')
 options=('!debug')
 depends=(
@@ -20,17 +22,17 @@ source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('SKIP')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$srcdir/$_srcname-$pkgver"
   ./bin/build
 }
 
 check() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$srcdir/$_srcname-$pkgver"
   ./bin/test
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$srcdir/$_srcname-$pkgver"
 
   install -Dm755 build/yeptes "$pkgdir/usr/bin/yeptes"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
