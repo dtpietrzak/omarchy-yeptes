@@ -19,7 +19,7 @@ depends=(
 )
 makedepends=('gcc' 'make')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP')
+sha256sums=('ae15eb0ab42b73e749fe9ded2574ebfc9bd0bb562f91ad1f3524e034bb7d406a')
 
 build() {
   cd "$srcdir/$_srcname-$pkgver"
