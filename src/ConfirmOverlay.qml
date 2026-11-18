@@ -7,11 +7,15 @@ import QtQuick.Controls.Material
 Rectangle {
     id: overlay
     property string name: ""
+    // A quick note whose text was all deleted: offer to delete the note
+    // itself (to the trash) or go back to what was saved.
+    property bool empty: false
     signal saveChosen()
+    signal deleteChosen()
     signal discardChosen()
     signal cancelled()
 
-    color: Qt.alpha("#0e0e10", 0.88)
+    color: Qt.alpha(theme.scrim, 0.88)
     onVisibleChanged: if (visible) saveButton.forceActiveFocus()
     Keys.onEscapePressed: overlay.cancelled()
 
@@ -26,8 +30,8 @@ Rectangle {
         width: Math.min(parent.width - 48, 460)
         height: content.implicitHeight + 40
         radius: theme.radius
-        color: "#17171b"
-        border.color: "#2a2a32"
+        color: theme.base
+        border.color: theme.line
 
         Column {
             id: content
@@ -38,17 +42,19 @@ Rectangle {
 
             Label {
                 width: parent.width
-                text: qsTr("Save changes to %1?").arg(overlay.name)
+                text: overlay.empty ? qsTr("There's no text in %1").arg(overlay.name)
+                                    : qsTr("Save changes to %1?").arg(overlay.name)
                 wrapMode: Text.Wrap
                 font.pixelSize: 18
                 font.weight: Font.DemiBold
-                color: "#e6e6ea"
+                color: theme.text
             }
             Label {
                 width: parent.width
-                text: qsTr("Your changes will be lost if you don't save them.")
+                text: overlay.empty ? qsTr("Do you want to delete this note, or revert it to how it was last saved?")
+                                    : qsTr("Your changes will be lost if you don't save them.")
                 wrapMode: Text.Wrap
-                color: "#b4b4bd"
+                color: theme.subtext
             }
             Flow {
                 width: parent.width
@@ -58,15 +64,15 @@ Rectangle {
 
                 PlainButton {
                     id: saveButton
-                    text: qsTr("Save")
+                    text: overlay.empty ? qsTr("Delete") : qsTr("Save")
                     primary: true
-                    onClicked: overlay.saveChosen()
+                    onClicked: overlay.empty ? overlay.deleteChosen() : overlay.saveChosen()
                     KeyNavigation.tab: cancelButton
                     KeyNavigation.backtab: discardButton
                 }
                 PlainButton {
                     id: discardButton
-                    text: qsTr("Discard")
+                    text: overlay.empty ? qsTr("Revert") : qsTr("Discard")
                     onClicked: overlay.discardChosen()
                     KeyNavigation.tab: saveButton
                     KeyNavigation.backtab: cancelButton

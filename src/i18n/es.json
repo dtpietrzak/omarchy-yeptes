@@ -7,7 +7,7 @@
   "HTML": "HTML",
   "Not saved yet": "Aún sin guardar",
   "Ln %1, Col %2": "Lín %1, col %2",
-  "%1 for shortcuts": "%1 para ver los atajos",
+  "%1 shortcuts": "%1 atajos",
   "Save changes to %1?": "¿Guardar los cambios en %1?",
   "Your changes will be lost if you don't save them.": "Los cambios se perderán si no los guardas.",
   "Cancel": "Cancelar",
@@ -57,10 +57,10 @@
   "The XDG desktop portal file chooser is not available.": "El selector de archivos del portal de escritorio XDG no está disponible.",
   "Could not listen for the portal file picker response.": "No se pudo esperar la respuesta del selector de archivos del portal.",
   "The portal file picker failed: %1": "El selector de archivos del portal falló: %1",
-  "%n characters": {
-    "one": "%n carácter",
-    "many": "%n caracteres",
-    "other": "%n caracteres"
+  "%n Chars": {
+    "one": "%n car.",
+    "many": "%n car.",
+    "other": "%n car."
   },
   "%n items": {
     "one": "%n elemento",
@@ -83,5 +83,15 @@
   "There is nothing to show as a table yet.": "Todavía no hay nada que mostrar como tabla.",
   "Unsaved changes": "Cambios sin guardar",
   "No changes yet. Every save of this note is recorded here.": "Aún no hay cambios. Cada vez que se guarda esta nota queda registrado aquí.",
-  "No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.": "No hay cambios sin guardar. Solo las notas de Yeptes (.ypts) conservan un historial de lo guardado."
+  "No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.": "No hay cambios sin guardar. Solo las notas de Yeptes (.ypts) conservan un historial de lo guardado.",
+  "Quick Notes": "Notas rápidas",
+  "There's no text in %1": "No hay texto en %1",
+  "Do you want to delete this note, or revert it to how it was last saved?": "¿Quieres eliminar esta nota o volver a como estaba la última vez que se guardó?",
+  "Delete": "Eliminar",
+  "Revert": "Revertir",
+  "Search notes": "Buscar notas",
+  "No notes contain “%1”.": "Ninguna nota contiene «%1».",
+  "Hide notes": "Ocultar notas",
+  "Show notes": "Mostrar notas",
+  "New note (Ctrl+N)": "Nueva nota (Ctrl+N)"
 }

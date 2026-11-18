@@ -6,6 +6,7 @@
         <file alias="HelpOverlay.qml">HelpOverlay.qml</file>
         <file alias="ConfirmOverlay.qml">ConfirmOverlay.qml</file>
         <file alias="PlainButton.qml">PlainButton.qml</file>
+        <file alias="PanelButton.qml">PanelButton.qml</file>
         <file alias="ViewMenu.qml">ViewMenu.qml</file>
         <file alias="SettingsMenu.qml">SettingsMenu.qml</file>
         <file alias="NotesPanel.qml">NotesPanel.qml</file>

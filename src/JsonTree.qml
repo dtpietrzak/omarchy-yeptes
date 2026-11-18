@@ -47,21 +47,21 @@ FocusScope {
             text: qsTr("This isn't valid JSON")
             font.pixelSize: 20
             font.weight: Font.DemiBold
-            color: "#e6e6ea"
+            color: theme.text
         }
         Label {
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.Wrap
             text: jsonModel.error
-            color: "#f7768e"
+            color: theme.red
         }
         Label {
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.Wrap
             text: qsTr("Press %1 to fix it in the text view.").arg("Esc")
-            color: "#8b8b96"
+            color: theme.dim
         }
     }
 
@@ -125,8 +125,8 @@ FocusScope {
             required property int start
             required property int end
             readonly property bool editing: tree.editingRow === index
-            readonly property color valueColor: kind === "string" ? "#9ece6a"
-                                              : kind === "null" ? "#8b8b96" : "#ff9e64"
+            readonly property color valueColor: kind === "string" ? theme.green
+                                              : kind === "null" ? theme.dim : theme.orange
 
             width: list.width
             height: tree.rowHeight
@@ -137,7 +137,7 @@ FocusScope {
                 anchors.rightMargin: 8
                 radius: Math.min(4, theme.radius)
                 color: row.ListView.isCurrentItem ? Qt.alpha(theme.accent, 0.16)
-                     : rowHover.hovered ? "#17171b" : "transparent"
+                     : rowHover.hovered ? theme.base : "transparent"
             }
             HoverHandler { id: rowHover }
             TapHandler {
@@ -162,7 +162,7 @@ FocusScope {
                         visible: row.container
                         text: "›"
                         rotation: row.collapsed ? 0 : 90
-                        color: "#9a9aa6"
+                        color: theme.dim
                         font.pixelSize: Math.round(tree.fontSize * 1.5)
                     }
                 }
@@ -170,7 +170,7 @@ FocusScope {
                     visible: row.depth > 0
                     anchors.verticalCenter: parent.verticalCenter
                     text: row.key + ":"
-                    color: row.indexed ? "#6b7089" : "#bb9af7"
+                    color: row.indexed ? theme.faint : theme.magenta
                     font.family: "monospace"
                     font.pixelSize: tree.fontSize
                 }
@@ -181,7 +181,7 @@ FocusScope {
                     elide: Text.ElideRight
                     text: !row.container ? row.value
                         : (row.kind === "object" ? "{ } " : "[ ] ") + qsTr("%n items", "", row.count)
-                    color: row.container ? "#6b7089" : row.valueColor
+                    color: row.container ? theme.faint : row.valueColor
                     font.family: "monospace"
                     font.pixelSize: tree.fontSize
                 }
@@ -193,7 +193,7 @@ FocusScope {
                         width: Math.max(160, row.width - cells.x - parent.x - 24)
                         height: tree.rowHeight - 4
                         radius: Math.min(4, theme.radius)
-                        color: "#0e0e10"
+                        color: theme.scrim
                         border.color: theme.accent
 
                         TextInput {
@@ -204,9 +204,9 @@ FocusScope {
                             verticalAlignment: TextInput.AlignVCenter
                             clip: true
                             text: row.value
-                            color: "#e6e6ea"
+                            color: theme.text
                             selectionColor: Qt.alpha(theme.accent, 0.35)
-                            selectedTextColor: "#ffffff"
+                            selectedTextColor: theme.text
                             font.family: "monospace"
                             font.pixelSize: tree.fontSize
                             selectByMouse: true

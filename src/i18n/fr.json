@@ -7,7 +7,7 @@
   "HTML": "HTML",
   "Not saved yet": "Pas encore enregistré",
   "Ln %1, Col %2": "Li %1, col %2",
-  "%1 for shortcuts": "%1 pour les raccourcis",
+  "%1 shortcuts": "%1 raccourcis",
   "Save changes to %1?": "Enregistrer les modifications de %1 ?",
   "Your changes will be lost if you don't save them.": "Vos modifications seront perdues si vous ne les enregistrez pas.",
   "Cancel": "Annuler",
@@ -57,10 +57,10 @@
   "The XDG desktop portal file chooser is not available.": "Le sélecteur de fichiers du portail de bureau XDG n'est pas disponible.",
   "Could not listen for the portal file picker response.": "Impossible d'attendre la réponse du sélecteur de fichiers du portail.",
   "The portal file picker failed: %1": "Le sélecteur de fichiers du portail a échoué : %1",
-  "%n characters": {
-    "one": "%n caractère",
-    "many": "%n caractères",
-    "other": "%n caractères"
+  "%n Chars": {
+    "one": "%n car.",
+    "many": "%n car.",
+    "other": "%n car."
   },
   "%n items": {
     "one": "%n élément",
@@ -83,5 +83,15 @@
   "There is nothing to show as a table yet.": "Il n'y a encore rien à afficher sous forme de tableau.",
   "Unsaved changes": "Modifications non enregistrées",
   "No changes yet. Every save of this note is recorded here.": "Aucune modification pour l'instant. Chaque enregistrement de cette note est consigné ici.",
-  "No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.": "Aucune modification non enregistrée. Seules les notes Yeptes (.ypts) conservent l'historique de leurs enregistrements."
+  "No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.": "Aucune modification non enregistrée. Seules les notes Yeptes (.ypts) conservent l'historique de leurs enregistrements.",
+  "Quick Notes": "Notes rapides",
+  "There's no text in %1": "Il n'y a pas de texte dans %1",
+  "Do you want to delete this note, or revert it to how it was last saved?": "Voulez-vous supprimer cette note, ou revenir à sa dernière version enregistrée ?",
+  "Delete": "Supprimer",
+  "Revert": "Rétablir",
+  "Search notes": "Rechercher dans les notes",
+  "No notes contain “%1”.": "Aucune note ne contient « %1 ».",
+  "Hide notes": "Masquer les notes",
+  "Show notes": "Afficher les notes",
+  "New note (Ctrl+N)": "Nouvelle note (Ctrl+N)"
 }

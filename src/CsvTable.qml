@@ -66,7 +66,7 @@ FocusScope {
         wrapMode: Text.Wrap
         visible: tableModel.empty
         text: qsTr("There is nothing to show as a table yet.")
-        color: "#8b8b96"
+        color: theme.dim
     }
 
     TableView {
@@ -109,9 +109,9 @@ FocusScope {
             readonly property bool editing: current && table.editing
 
             implicitHeight: table.rowHeight
-            color: current ? Qt.alpha(theme.accent, 0.16) : row === 0 ? "#1b1b21" : "transparent"
+            color: current ? Qt.alpha(theme.accent, 0.16) : row === 0 ? theme.raised : "transparent"
             border.width: 1
-            border.color: current ? theme.accent : "#24242c"
+            border.color: current ? theme.accent : theme.line
 
             Text {
                 anchors.fill: parent
@@ -121,7 +121,7 @@ FocusScope {
                 verticalAlignment: Text.AlignVCenter
                 elide: Text.ElideRight
                 text: cell.display
-                color: cell.row === 0 ? "#e6e6ea" : "#c9c9d1"
+                color: cell.row === 0 ? theme.text : theme.subtext
                 font.family: "monospace"
                 font.pixelSize: table.fontSize
                 font.weight: cell.row === 0 ? Font.DemiBold : Font.Normal
@@ -143,9 +143,9 @@ FocusScope {
                     verticalAlignment: TextInput.AlignVCenter
                     clip: true
                     text: cell.display
-                    color: "#e6e6ea"
+                    color: theme.text
                     selectionColor: Qt.alpha(theme.accent, 0.35)
-                    selectedTextColor: "#ffffff"
+                    selectedTextColor: theme.text
                     font.family: "monospace"
                     font.pixelSize: table.fontSize
                     selectByMouse: true

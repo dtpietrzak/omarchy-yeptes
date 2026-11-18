@@ -46,6 +46,8 @@ public:
     void setFencesEnabled(bool enabled);
     bool fencesEnabled() const { return m_enabled; }
     void setAccent(const QColor &accent);
+    // The Omarchy palette by colors.toml name; missing names keep the defaults.
+    void setPalette(const QHash<QString, QString> &palette);
     // The Code view colors the whole document in one language, by its
     // canonical name. An empty name goes back to coloring fences only.
     void setDocumentLanguage(const QString &name);
@@ -83,6 +85,7 @@ private:
     bool m_enabled = true;
     QString m_documentLanguage;
     QColor m_accent = QColor("#FFD60A");
+    QHash<QString, QString> m_palette;
     QTextCharFormat m_formats[TokenCount];
     QHash<QString, SyntaxLanguage *> m_languages;
     // Fence languages seen so far; a block's state stores an index into it.

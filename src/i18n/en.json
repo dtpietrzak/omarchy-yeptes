@@ -1,7 +1,7 @@
 {
-  "%n characters": {
-    "one": "%n character",
-    "other": "%n characters"
+  "%n Chars": {
+    "one": "%n Char",
+    "other": "%n Chars"
   },
   "%n items": {
     "one": "%n item",

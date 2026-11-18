@@ -39,6 +39,14 @@ void Highlighter::setAccent(const QColor &accent) {
     rehighlight();
 }
 
+void Highlighter::setPalette(const QHash<QString, QString> &palette) {
+    if (palette == m_palette)
+        return;
+    m_palette = palette;
+    rebuildFormats();
+    rehighlight();
+}
+
 void Highlighter::setDocumentLanguage(const QString &name) {
     if (name == m_documentLanguage)
         return;
@@ -46,23 +54,26 @@ void Highlighter::setDocumentLanguage(const QString &name) {
     rehighlight();
 }
 
-// Keywords and headings take the Omarchy accent; the rest is a fixed palette
-// picked to read on the dark window.
+// Keywords and headings take the Omarchy accent and the rest the theme's
+// terminal colors, with a palette picked for the dark window as a fallback.
 void Highlighter::rebuildFormats() {
     auto set = [this](Token token, const QColor &color) {
         m_formats[token] = QTextCharFormat();
         m_formats[token].setForeground(color);
     };
+    auto themed = [this](const char *name, const char *fallback) {
+        return QColor(m_palette.value(QString::fromLatin1(name), QString::fromLatin1(fallback)));
+    };
     set(Keyword, m_accent);
-    set(Type, QColor("#4fd6be"));
-    set(Literal, QColor("#ff9e64"));
-    set(Number, QColor("#ff9e64"));
-    set(String, QColor("#9ece6a"));
-    set(Comment, QColor("#6b7089"));
-    set(Function, QColor("#7dcfff"));
-    set(Property, QColor("#bb9af7"));
-    set(Tag, QColor("#f7768e"));
-    set(Fence, QColor("#7a7f99"));
+    set(Type, themed("cyan", "#4fd6be"));
+    set(Literal, themed("orange", "#ff9e64"));
+    set(Number, themed("orange", "#ff9e64"));
+    set(String, themed("green", "#9ece6a"));
+    set(Comment, themed("dark_foreground", "#6b7089"));
+    set(Function, themed("blue", "#7dcfff"));
+    set(Property, themed("magenta", "#bb9af7"));
+    set(Tag, themed("red", "#f7768e"));
+    set(Fence, themed("dark_foreground", "#7a7f99"));
     set(Heading, m_accent);
     m_formats[Comment].setFontItalic(true);
     m_formats[Heading].setFontWeight(QFont::Bold);

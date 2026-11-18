@@ -74,6 +74,11 @@ public:
     Q_INVOKABLE QStringList monospaceFamilies() const;
     // The .ypts files in Documents/Yeptes, newest first: name, path, date.
     Q_INVOKABLE QVariantList notes() const;
+    // The notes folder as people write it: "~/Documents/Yeptes/".
+    Q_INVOKABLE QString notesFolderLabel() const;
+    // The paths of notes whose name or text contains the query, ignoring
+    // case. The open note is searched as it is now, saved or not.
+    Q_INVOKABLE QStringList notesContaining(const QString &query) const;
     // Whether a path is inside Documents/Yeptes.
     Q_INVOKABLE bool inNotesFolder(const QString &path) const;
     // Moves a note in Documents/Yeptes to the trash. If it is the open note,
@@ -115,6 +120,7 @@ public:
     Q_INVOKABLE QString rendered(const QString &view, int pixelSize) const;
 
     void setAccent(const QString &accent);
+    void setPalette(const QHash<QString, QString> &palette);
     Highlighter *highlighter() const { return m_highlighter; }
 
     static bool readFile(const QString &path, FileText *result, QString *error);
@@ -152,6 +158,7 @@ private:
     QPointer<QTextDocument> m_document;
     Highlighter *m_highlighter = nullptr;
     QString m_text, m_savedText, m_path, m_message, m_accent;
+    QHash<QString, QString> m_palette;
     QString m_codeLanguage, m_syntaxDirectory = QStringLiteral(":/syntax");
     bool m_codeView = false;
     // The saved changes of a note, oldest first, exactly as they are in the file.

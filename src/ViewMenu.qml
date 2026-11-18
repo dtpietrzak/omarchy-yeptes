@@ -51,8 +51,8 @@ FocusScope {
         width: Math.max(230, column.implicitWidth + 12)
         height: column.implicitHeight + 12
         radius: theme.radius
-        color: "#17171b"
-        border.color: "#2a2a32"
+        color: theme.base
+        border.color: theme.line
 
         MouseArea { anchors.fill: parent }
 
@@ -74,7 +74,7 @@ FocusScope {
                     height: 32
                     radius: Math.min(4, theme.radius)
                     color: index === menu.index ? Qt.alpha(theme.accent, 0.16)
-                         : optionHover.hovered ? "#222228" : "transparent"
+                         : optionHover.hovered ? theme.raised : "transparent"
 
                     Label {
                         x: 10
@@ -89,7 +89,7 @@ FocusScope {
                         x: 30
                         anchors.verticalCenter: parent.verticalCenter
                         text: option.modelData.label
-                        color: "#e6e6ea"
+                        color: theme.text
                         font.pixelSize: 13
                         font.weight: option.chosen ? Font.DemiBold : Font.Normal
                         font.strikeout: !!option.modelData.struck
@@ -102,7 +102,7 @@ FocusScope {
                         anchors.rightMargin: 10
                         anchors.verticalCenter: parent.verticalCenter
                         text: option.modelData.keys
-                        color: "#8b8b96"
+                        color: theme.dim
                         font.family: "monospace"
                         font.pixelSize: 12
                     }

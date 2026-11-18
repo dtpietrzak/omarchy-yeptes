@@ -61,16 +61,36 @@ void Theme::refreshRounding() {
     m_roundingTimeout.start();
 }
 
-QString Theme::readAccent(const QString &path) {
+QHash<QString, QString> Theme::readColors(const QString &path) {
+    QHash<QString, QString> colors;
     QFile file(path);
-    if (file.open(QIODevice::ReadOnly)) {
-        const QRegularExpression expression(R"re(^\s*accent\s*=\s*["'](#[0-9a-fA-F]{6})["'])re",
-                                            QRegularExpression::MultilineOption);
-        const auto match = expression.match(QString::fromUtf8(file.readAll()));
-        if (match.hasMatch())
-            return match.captured(1);
+    if (!file.open(QIODevice::ReadOnly))
+        return colors;
+    const QRegularExpression expression(R"re(^\s*([a-z_]+)\s*=\s*["']([^"']*)["'])re",
+                                        QRegularExpression::MultilineOption);
+    static const QRegularExpression hex(R"(^#[0-9a-fA-F]{6}$)");
+    auto matches = expression.globalMatch(QString::fromUtf8(file.readAll()));
+    while (matches.hasNext()) {
+        const auto match = matches.next();
+        const QString key = match.captured(1), value = match.captured(2);
+        if (key == "mode" || hex.match(value).hasMatch())
+            colors.insert(key, value);
     }
-    return "#FFD60A";
+    return colors;
+}
+
+QColor Theme::pick(const QString &key, const char *fallback) const {
+    const auto value = m_colors.value(key);
+    return QColor(value.isEmpty() ? QString::fromLatin1(fallback) : value);
+}
+
+// Labels sit between the body text and the darkest foreground, which on its
+// own is too faint to read at status-bar size.
+QColor Theme::dim() const {
+    if (!m_colors.contains("foreground") || !m_colors.contains("dark_foreground"))
+        return QColor("#8b8b96");
+    const QColor a = subtext(), b = faint();
+    return QColor::fromRgbF((a.redF() + b.redF()) / 2, (a.greenF() + b.greenF()) / 2, (a.blueF() + b.blueF()) / 2);
 }
 
 // Black or white, whichever reads on the accent (WCAG relative luminance).
@@ -100,9 +120,11 @@ void Theme::reload() {
         if (QFileInfo::exists(path))
             m_watcher.addPath(path);
 
-    const auto accent = readAccent(m_directory + "/theme/colors.toml");
-    if (accent != m_accent) {
+    auto colors = readColors(m_directory + "/theme/colors.toml");
+    const auto accent = colors.value("accent", "#FFD60A");
+    if (accent != m_accent || colors != m_colors) {
         m_accent = accent;
+        m_colors = std::move(colors);
         emit changed();
     }
 }

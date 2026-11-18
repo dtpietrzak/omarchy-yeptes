@@ -53,7 +53,11 @@ int main(int argc, char *argv[]) {
     TableModel tableModel;
 
     backend.setAccent(theme.accent());
-    QObject::connect(&theme, &Theme::changed, &backend, [&] { backend.setAccent(theme.accent()); });
+    backend.setPalette(theme.colors());
+    QObject::connect(&theme, &Theme::changed, &backend, [&] {
+        backend.setAccent(theme.accent());
+        backend.setPalette(theme.colors());
+    });
 
     // "yeptes notes.md" and "yeptes open notes.md" both open the file.
     if (!arguments.isEmpty() && arguments.first() == "open")

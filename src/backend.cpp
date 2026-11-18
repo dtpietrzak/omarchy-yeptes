@@ -147,6 +147,7 @@ void Backend::attachTextDocument(QTextDocument *document) {
 
     m_highlighter = new Highlighter(m_document, m_syntaxDirectory);
     m_highlighter->setAccent(QColor(m_accent));
+    m_highlighter->setPalette(m_palette);
     applyHighlighting();
 }
 
@@ -193,6 +194,12 @@ void Backend::setAccent(const QString &accent) {
     m_accent = accent;
     if (m_highlighter)
         m_highlighter->setAccent(QColor(accent));
+}
+
+void Backend::setPalette(const QHash<QString, QString> &palette) {
+    m_palette = palette;
+    if (m_highlighter)
+        m_highlighter->setPalette(palette);
 }
 
 void Backend::replaceRange(int start, int end, const QString &replacement) {
@@ -334,6 +341,14 @@ static QString notesFolder() {
     return documents + QStringLiteral("/Yeptes");
 }
 
+QString Backend::notesFolderLabel() const {
+    QString folder = QDir::cleanPath(notesFolder());
+    const QString home = QDir::cleanPath(QDir::homePath());
+    if (folder == home || folder.startsWith(home + QLatin1Char('/')))
+        folder = QLatin1Char('~') + folder.mid(home.size());
+    return folder + QLatin1Char('/');
+}
+
 bool Backend::inNotesFolder(const QString &path) const {
     auto resolved = [](const QString &p) {
         const QFileInfo info(p);
@@ -351,6 +366,32 @@ QVariantList Backend::notes() const {
                                 {"path", file.absoluteFilePath()},
                                 {"date", QLocale().toString(file.lastModified().date(), QLocale::ShortFormat)}});
     return list;
+}
+
+QStringList Backend::notesContaining(const QString &query) const {
+    QStringList paths;
+    const QString needle = query.trimmed();
+    if (needle.isEmpty())
+        return paths;
+    const QFileInfoList files = QDir(notesFolder()).entryInfoList(
+        {QStringLiteral("*.ypts")}, QDir::Files | QDir::Readable);
+    for (const QFileInfo &file : files) {
+        const QString path = file.absoluteFilePath();
+        QString text;
+        if (path == m_path) {
+            text = m_text;
+        } else {
+            QFile handle(path);
+            if (!handle.open(QIODevice::ReadOnly))
+                continue;
+            QStringList history;
+            splitHistory(QString::fromUtf8(handle.readAll()), &text, &history);
+        }
+        if (file.completeBaseName().contains(needle, Qt::CaseInsensitive)
+            || text.contains(needle, Qt::CaseInsensitive))
+            paths.append(path);
+    }
+    return paths;
 }
 
 bool Backend::deleteNote(const QString &path) {
@@ -492,7 +533,7 @@ QString Backend::rendered(const QString &view, int pixelSize) const {
                 format.setTopMargin(block == document.begin() ? 0 : pixelSize * 1.1);
                 format.setBottomMargin(pixelSize * 0.5);
             } else if (code) {
-                format.setBackground(QColor("#1b1b21"));
+                format.setBackground(QColor(m_palette.value("lighter_background", "#1b1b21")));
                 format.setTopMargin(isCode(block.previous()) ? 0 : pixelSize * 0.3);
                 format.setBottomMargin(isCode(block.next()) ? 0 : pixelSize * 0.9);
             } else if (block.textList()) {
@@ -503,7 +544,7 @@ QString Backend::rendered(const QString &view, int pixelSize) const {
             cursor.setBlockFormat(format);
             if (format.intProperty(QTextFormat::BlockQuoteLevel) > 0) {
                 QTextCharFormat quoted;
-                quoted.setForeground(QColor("#9a9aa6"));
+                quoted.setForeground(QColor(m_palette.value("dark_foreground", "#9a9aa6")));
                 quoted.setFontItalic(true);
                 cursor.select(QTextCursor::BlockUnderCursor);
                 cursor.mergeCharFormat(quoted);

@@ -7,7 +7,7 @@
   "HTML": "HTML",
   "Not saved yet": "Noch nicht gespeichert",
   "Ln %1, Col %2": "Zl %1, Sp %2",
-  "%1 for shortcuts": "%1 für Tastenkürzel",
+  "%1 shortcuts": "%1 Tastenkürzel",
   "Save changes to %1?": "Änderungen an %1 speichern?",
   "Your changes will be lost if you don't save them.": "Deine Änderungen gehen verloren, wenn du sie nicht speicherst.",
   "Cancel": "Abbrechen",
@@ -57,7 +57,7 @@
   "The XDG desktop portal file chooser is not available.": "Die Dateiauswahl des XDG-Desktop-Portals ist nicht verfügbar.",
   "Could not listen for the portal file picker response.": "Auf die Antwort der Portal-Dateiauswahl konnte nicht gewartet werden.",
   "The portal file picker failed: %1": "Die Portal-Dateiauswahl ist fehlgeschlagen: %1",
-  "%n characters": {
+  "%n Chars": {
     "one": "%n Zeichen",
     "other": "%n Zeichen"
   },
@@ -81,5 +81,15 @@
   "There is nothing to show as a table yet.": "Es gibt noch nichts, was sich als Tabelle zeigen lässt.",
   "Unsaved changes": "Ungespeicherte Änderungen",
   "No changes yet. Every save of this note is recorded here.": "Noch keine Änderungen. Jedes Speichern dieser Notiz wird hier festgehalten.",
-  "No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.": "Keine ungespeicherten Änderungen. Nur Yeptes-Notizen (.ypts) führen einen Verlauf ihrer Speicherungen."
+  "No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.": "Keine ungespeicherten Änderungen. Nur Yeptes-Notizen (.ypts) führen einen Verlauf ihrer Speicherungen.",
+  "Quick Notes": "Schnelle Notizen",
+  "There's no text in %1": "%1 enthält keinen Text",
+  "Do you want to delete this note, or revert it to how it was last saved?": "Möchtest du diese Notiz löschen oder auf den zuletzt gespeicherten Stand zurücksetzen?",
+  "Delete": "Löschen",
+  "Revert": "Zurücksetzen",
+  "Search notes": "Notizen durchsuchen",
+  "No notes contain “%1”.": "Keine Notiz enthält „%1“.",
+  "Hide notes": "Notizen ausblenden",
+  "Show notes": "Notizen einblenden",
+  "New note (Ctrl+N)": "Neue Notiz (Strg+N)"
 }

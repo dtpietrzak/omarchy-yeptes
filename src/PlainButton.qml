@@ -13,9 +13,9 @@ Rectangle {
     implicitWidth: label.implicitWidth + 30
     implicitHeight: 36
     radius: Math.min(theme.radius, height / 2)
-    color: primary ? theme.accent : hover.hovered ? "#26262d" : "transparent"
+    color: primary ? theme.accent : hover.hovered ? theme.raised : "transparent"
     border.width: activeFocus ? 2 : 1
-    border.color: activeFocus ? (primary ? "#ffffff" : theme.accent) : primary ? "transparent" : "#34343d"
+    border.color: activeFocus ? (primary ? theme.text : theme.accent) : primary ? "transparent" : theme.line
     activeFocusOnTab: true
 
     Label {
@@ -24,7 +24,7 @@ Rectangle {
         text: button.text
         font.pixelSize: 14
         font.weight: button.primary ? Font.DemiBold : Font.Normal
-        color: button.primary ? theme.accentForeground : "#e6e6ea"
+        color: button.primary ? theme.accentForeground : theme.text
     }
     HoverHandler { id: hover; cursorShape: Qt.PointingHandCursor }
     TapHandler { onTapped: button.clicked() }

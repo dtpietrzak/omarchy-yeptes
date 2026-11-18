@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Layouts
+import QtQuick.Shapes
 import QtCore
 
 ApplicationWindow {
@@ -12,10 +13,12 @@ ApplicationWindow {
     minimumHeight: 400
     visible: true
     title: qsTr("%1 — Yeptes").arg(win.displayName + (backend.modified ? " •" : ""))
-    color: win.backgroundColor
+    color: win.editorBackground
 
-    Material.theme: Material.Dark
+    Material.theme: theme.dark ? Material.Dark : Material.Light
     Material.accent: theme.accent
+    Material.background: theme.base
+    Material.foreground: theme.text
     Material.roundedScale: theme.radius
 
     readonly property string displayName: backend.fileName !== "" ? backend.fileName : qsTr("Untitled")
@@ -55,8 +58,13 @@ ApplicationWindow {
     ]
     property int fontSize: 12
     property string fontFamily: "monospace"
+    // The editor follows the Omarchy theme until a color is picked by hand.
+    property bool themeBackground: true
+    property bool themeText: true
     property color backgroundColor: "#1a1b26"
     property color textColor: "#c0caf5"
+    readonly property color editorBackground: themeBackground ? theme.editorBackground : backgroundColor
+    readonly property color editorText: themeText ? theme.editorText : textColor
 
     // Text appearance is remembered between runs.
     Settings {
@@ -65,12 +73,14 @@ ApplicationWindow {
         property alias fontFamily: win.fontFamily
         property alias backgroundColor: win.backgroundColor
         property alias textColor: win.textColor
+        property alias themeBackground: win.themeBackground
+        property alias themeText: win.themeText
     }
     property bool wrap: true
 
     // The notes panel on the right: shown or collapsed, and how wide.
     property bool notesVisible: true
-    property real notesWidth: 240
+    property real notesWidth: 200
     property var noteList: []
     // The order you dragged the notes into (a JSON list of paths). Notes that
     // are not in it yet, such as a newly saved one, come first.
@@ -185,6 +195,8 @@ ApplicationWindow {
         languageMenuVisible = false
         if (backend.modified) {
             pending = action
+            confirm.empty = backend.filePath !== "" && backend.inNotesFolder(backend.filePath)
+                && backend.text.trim() === ""
             confirm.open()
         } else {
             action()
@@ -270,30 +282,71 @@ ApplicationWindow {
     Shortcut { sequences: [StandardKey.Redo]; context: Qt.ApplicationShortcut; enabled: !win.editing && !win.editingValue; onActivated: editor.redo() }
 
     // The pieces of the status bar: a divider, and a label that acts as a button.
-    component Divider: Label {
-        text: "|"
-        color: "#3a3a44"
-        font.pixelSize: 12
+    component Divider: Rectangle {
+        implicitWidth: 1
+        implicitHeight: 12
+        color: theme.line
     }
+    // An optional line icon sits before the text: SVG path data on a 24px
+    // grid, stroked in the text's color (paths from Lucide, ISC license).
     component StatusButton: Rectangle {
         id: statusButton
         property alias text: statusButtonLabel.text
+        property string icon: ""
         property bool active: false
-        property color textColor: "#c9c9d1"
+        property color textColor: theme.subtext
+        // What the icon and text need; the row of buttons sizes them all alike.
+        readonly property real contentWidth: statusButtonRow.implicitWidth
+        // Highlighted, by the pointer or because its menu is open.
+        readonly property bool lit: statusButtonHover.hovered || active
+        // The button shown before this one. A divider sits between them,
+        // and steps aside while either is highlighted.
+        property Item previous: null
         signal clicked()
-        implicitWidth: statusButtonLabel.implicitWidth + 16
+        implicitWidth: contentWidth + 12
         implicitHeight: 22
         radius: Math.min(4, theme.radius)
-        color: statusButtonHover.hovered || active ? "#26262d" : "transparent"
+        color: statusButtonHover.hovered || active ? theme.raised : "transparent"
 
-        Label {
-            id: statusButtonLabel
+        Row {
+            id: statusButtonRow
             anchors.centerIn: parent
-            font.pixelSize: 12
-            color: statusButton.textColor
+            spacing: 5
+            Item {
+                visible: statusButton.icon !== ""
+                width: 12
+                height: 12
+                anchors.verticalCenter: parent.verticalCenter
+                Shape {
+                    width: 24
+                    height: 24
+                    scale: 0.5
+                    transformOrigin: Item.TopLeft
+                    preferredRendererType: Shape.CurveRenderer
+                    ShapePath {
+                        strokeColor: statusButton.textColor
+                        strokeWidth: 2.2
+                        fillColor: "transparent"
+                        capStyle: ShapePath.RoundCap
+                        joinStyle: ShapePath.RoundJoin
+                        PathSvg { path: statusButton.icon }
+                    }
+                }
+            }
+            Label {
+                id: statusButtonLabel
+                anchors.verticalCenter: parent.verticalCenter
+                font.pixelSize: 11
+                color: statusButton.textColor
+            }
         }
         HoverHandler { id: statusButtonHover; cursorShape: Qt.PointingHandCursor }
         TapHandler { onTapped: statusButton.clicked() }
+        Divider {
+            visible: statusButton.previous !== null && !statusButton.lit && !statusButton.previous.lit
+            anchors.left: parent.left
+            anchors.verticalCenter: parent.verticalCenter
+        }
     }
 
     // Right-to-left languages mirror the window; the Translator sets the
@@ -334,9 +387,9 @@ ApplicationWindow {
                         bottomPadding: 14
                         font.family: win.fontFamily
                         font.pixelSize: win.fontSize
-                        color: win.textColor
+                        color: win.editorText
                         selectionColor: Qt.alpha(theme.accent, 0.35)
-                        selectedTextColor: "#ffffff"
+                        selectedTextColor: win.editorText
                         wrapMode: win.wrap ? TextArea.Wrap : TextArea.NoWrap
                         tabStopDistance: metrics.averageCharacterWidth * 4
                         selectByMouse: true
@@ -435,44 +488,48 @@ ApplicationWindow {
                     id: notesHandle
                     visible: win.notesVisible
                     Layout.fillHeight: true
-                    Layout.preferredWidth: 5
-                    color: handleDrag.active || handleHover.hovered ? "#2a2a32" : "#1d1d22"
-                    HoverHandler { id: handleHover; cursorShape: Qt.SplitHCursor }
-                    DragHandler {
-                        id: handleDrag
-                        target: null
-                        cursorShape: Qt.SplitHCursor
-                        property real startWidth: 0
-                        onActiveChanged: if (active) startWidth = win.notesWidth
-                        onTranslationChanged: {
-                            if (!active)
-                                return
-                            // The panel is on the right, so dragging left widens it
-                            // (the other way round in a mirrored window).
-                            const sign = Qt.application.layoutDirection === Qt.RightToLeft ? 1 : -1
-                            win.notesWidth = Math.max(160, Math.min(win.width * 0.6, startWidth + sign * translation.x))
+                    // A hairline to look at, with a wider strip to grab that
+                    // overhangs both sides; it sits above them so it gets the pointer.
+                    Layout.preferredWidth: 1
+                    z: 2
+                    color: handleDrag.active || handleHover.hovered ? theme.line : Qt.alpha(theme.line, 0.45)
+                    Item {
+                        anchors.centerIn: parent
+                        width: 7
+                        height: parent.height
+                        HoverHandler { id: handleHover; cursorShape: Qt.SplitHCursor }
+                        DragHandler {
+                            id: handleDrag
+                            target: null
+                            cursorShape: Qt.SplitHCursor
+                            property real startWidth: 0
+                            onActiveChanged: if (active) startWidth = win.notesWidth
+                            onTranslationChanged: {
+                                if (!active)
+                                    return
+                                // The panel is on the right, so dragging left widens it
+                                // (the other way round in a mirrored window).
+                                const sign = Qt.application.layoutDirection === Qt.RightToLeft ? 1 : -1
+                                win.notesWidth = Math.max(160, Math.min(win.width * 0.6, startWidth + sign * translation.x))
+                            }
                         }
                     }
                 }
 
-                // With the panel collapsed, a slim rail keeps the button that
-                // brings it back, so no text runs underneath it.
+                // With the panel collapsed, a slim rail keeps the buttons that
+                // bring it back and start a new note, so no text runs underneath.
                 Rectangle {
                     visible: !win.notesVisible
                     Layout.fillHeight: true
-                    Layout.preferredWidth: 38
-                    color: "#141417"
-                    Rectangle {
+                    Layout.preferredWidth: 28
+                    color: theme.chrome
+                    Column {
                         anchors.top: parent.top
                         anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.topMargin: 6
-                        width: 28
-                        height: 26
-                        radius: Math.min(4, theme.radius)
-                        color: expandHover.hovered ? "#26262d" : "transparent"
-                        Label { anchors.centerIn: parent; text: "«"; color: "#c9c9d1"; font.pixelSize: 15 }
-                        HoverHandler { id: expandHover; cursorShape: Qt.PointingHandCursor }
-                        TapHandler { onTapped: win.notesVisible = true }
+                        anchors.topMargin: 4
+                        spacing: 2
+                        PanelButton { text: "«"; tip: qsTr("Show notes"); onClicked: win.notesVisible = true }
+                        PanelButton { text: "+"; tip: qsTr("New note (Ctrl+N)"); onClicked: win.guard(() => backend.newNote()) }
                     }
                 }
 
@@ -481,9 +538,11 @@ ApplicationWindow {
                     Layout.fillHeight: true
                     Layout.preferredWidth: Math.max(160, Math.min(win.notesWidth, win.width * 0.6))
                     notes: win.noteList
+                    fontFamily: win.fontFamily
                     current: backend.filePath
                     onPicked: (path) => win.guard(() => backend.load(path))
                     onCollapseRequested: win.notesVisible = false
+                    onNewRequested: win.guard(() => backend.newNote())
                     onDeleteRequested: (path) => backend.deleteNote(path)
                     onMoved: (from, to) => win.moveNote(from, to)
                 }
@@ -493,7 +552,7 @@ ApplicationWindow {
                 id: statusBar
                 Layout.fillWidth: true
                 Layout.preferredHeight: 28
-                color: "#141417"
+                color: theme.chrome
                 // A note like "Saved" steps aside for the path again; an
                 // error stays until the next action.
                 property bool showMessage: false
@@ -501,81 +560,149 @@ ApplicationWindow {
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 10
-                    anchors.rightMargin: 6
+                    anchors.leftMargin: 0
+                    // Puts the cog's middle 14px from the edge, in line with the
+                    // buttons on the collapsed notes rail (28px wide) above it.
+                    anchors.rightMargin: 4
                     spacing: 8
 
-                    StatusButton {
-                        text: win.modeLabel + "  ▴"
-                        active: win.viewMenuVisible
-                        onClicked: { win.settingsVisible = false; win.exportMenuVisible = false; win.languageMenuVisible = false; win.viewMenuVisible = !win.viewMenuVisible }
+                    // The buttons sit side by side, all as wide as the widest one.
+                    Row {
+                        id: statusButtons
+                        readonly property real buttonWidth: Math.max(viewButton.contentWidth,
+                            languageButton.visible ? languageButton.contentWidth : 0,
+                            exportButton.visible ? exportButton.contentWidth : 0,
+                            openButton.contentWidth) + 12
+                        StatusButton {
+                            id: viewButton
+                            implicitWidth: statusButtons.buttonWidth
+                            text: win.modeLabel
+                            icon: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M16 13H8 M16 17H8 M10 9H8"
+                            active: win.viewMenuVisible
+                            onClicked: { win.settingsVisible = false; win.exportMenuVisible = false; win.languageMenuVisible = false; win.viewMenuVisible = !win.viewMenuVisible }
+                        }
+                        StatusButton {
+                            id: languageButton
+                            previous: viewButton
+                            implicitWidth: statusButtons.buttonWidth
+                            visible: win.mode === "code"
+                            text: backend.codeLanguage !== "" ? backend.codeLanguageName : qsTr("Plain text")
+                            icon: "M16 18l6-6-6-6 M8 6l-6 6 6 6"
+                            active: win.languageMenuVisible
+                            onClicked: win.languageMenuVisible ? win.languageMenuVisible = false : win.openLanguageMenu()
+                        }
+                        StatusButton {
+                            id: exportButton
+                            previous: languageButton.visible ? languageButton : viewButton
+                            implicitWidth: statusButtons.buttonWidth
+                            visible: backend.note
+                            text: qsTr("Export")
+                            icon: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4 M17 8l-5-5-5 5 M12 3v12"
+                            active: win.exportMenuVisible
+                            onClicked: win.exportMenuVisible ? win.exportMenuVisible = false : win.openExportMenu()
+                        }
+                        StatusButton {
+                            id: openButton
+                            previous: exportButton.visible ? exportButton : languageButton.visible ? languageButton : viewButton
+                            implicitWidth: statusButtons.buttonWidth
+                            text: qsTr("Open")
+                            icon: "M6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"
+                            onClicked: win.guard(() => backend.open())
+                        }
+                        // Right against Open, and out of the way while it is lit.
+                        Divider {
+                            anchors.verticalCenter: parent.verticalCenter
+                            opacity: openButton.lit ? 0 : 1
+                        }
                     }
-                    Divider { visible: win.mode === "code" }
-                    StatusButton {
-                        id: languageButton
-                        visible: win.mode === "code"
-                        text: (backend.codeLanguage !== "" ? backend.codeLanguageName : qsTr("Plain text")) + "  ▴"
-                        active: win.languageMenuVisible
-                        onClicked: win.languageMenuVisible ? win.languageMenuVisible = false : win.openLanguageMenu()
-                    }
-                    Divider { visible: backend.note }
-                    StatusButton {
-                        id: exportButton
-                        visible: backend.note
-                        text: qsTr("Export as…")
-                        active: win.exportMenuVisible
-                        onClicked: win.exportMenuVisible ? win.exportMenuVisible = false : win.openExportMenu()
-                    }
-                    Divider { visible: backend.note }
-                    StatusButton {
-                        text: qsTr("Open…")
-                        onClicked: win.guard(() => backend.open())
-                    }
-                    Divider {}
                     Label {
                         Layout.fillWidth: true
                         text: statusBar.showMessage && backend.message !== "" ? backend.message
                             : (backend.fileName !== "" ? backend.fileName : qsTr("Not saved yet"))
                               + (backend.modified ? " *" : "")
-                        color: statusBar.showMessage && backend.messageIsError ? "#f7768e" : "#8b8b96"
-                        font.pixelSize: 12
+                        color: statusBar.showMessage && backend.messageIsError ? theme.red : theme.dim
+                        font.pixelSize: 11
                         elide: Text.ElideMiddle
                     }
-                    Divider {}
                     Label {
-                        text: qsTr("%1 for shortcuts").arg("Ctrl+/")
-                        color: "#8b8b96"
-                        font.pixelSize: 12
+                        text: qsTr("%1 shortcuts").arg("Ctrl+/")
+                        color: theme.faint
+                        font.family: win.fontFamily
+                        font.pixelSize: 10
                     }
                     Divider { visible: cursorLabel.visible }
-                    Label {
+                    // The line sits at the left and the column at the right of a
+                    // space with room for two digits each, so neither twitches
+                    // while typing; it only grows past that. The translated
+                    // text is split after the line's comma.
+                    Item {
                         id: cursorLabel
                         visible: win.editing
                         readonly property var at: backend.cursorInfo(editor.cursorPosition)
-                        text: qsTr("Ln %1, Col %2").arg(win.number(at.line)).arg(win.number(at.column))
-                        color: "#8b8b96"
-                        font.pixelSize: 12
+                        readonly property string template: qsTr("Ln %1, Col %2")
+                        readonly property int split: template.indexOf(",", template.indexOf("%1")) + 1
+                        implicitHeight: lineLabel.implicitHeight
+                        Layout.preferredWidth: Math.max(lineLabel.implicitWidth + columnLabel.implicitWidth + 6,
+                                                        cursorRoom.advanceWidth)
+                        Label {
+                            id: lineLabel
+                            anchors.left: parent.left
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: cursorLabel.split > 0 ? cursorLabel.template.slice(0, cursorLabel.split).arg(win.number(cursorLabel.at.line))
+                                : cursorLabel.template.arg(win.number(cursorLabel.at.line)).arg(win.number(cursorLabel.at.column))
+                            color: theme.faint
+                            font.family: win.fontFamily
+                            font.pixelSize: 10
+                        }
+                        Label {
+                            id: columnLabel
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                            visible: cursorLabel.split > 0
+                            text: cursorLabel.template.slice(cursorLabel.split).trim().arg(win.number(cursorLabel.at.column))
+                            color: theme.faint
+                            font: lineLabel.font
+                        }
+                        TextMetrics {
+                            id: cursorRoom
+                            font: lineLabel.font
+                            text: cursorLabel.template.arg(win.number(88)).arg(win.number(88))
+                        }
                     }
                     Divider {}
                     Label {
-                        text: qsTr("%n characters", "", backend.characterCount)
-                        color: "#8b8b96"
-                        font.pixelSize: 12
+                        id: countLabel
+                        text: qsTr("%n Chars", "", backend.characterCount)
+                        color: theme.faint
+                        font.family: win.fontFamily
+                        font.pixelSize: 10
+                        // Room for three digits before it grows, counting from the right.
+                        Layout.preferredWidth: Math.max(implicitWidth, countRoom.advanceWidth)
+                        horizontalAlignment: Text.AlignRight
+                        TextMetrics {
+                            id: countRoom
+                            font: countLabel.font
+                            text: qsTr("%n Chars", "", 888)
+                        }
                     }
                     // Drawn rather than typed, so a color emoji font cannot tint it.
                     Rectangle {
-                        implicitWidth: 30
+                        implicitWidth: 20
                         implicitHeight: 22
                         radius: Math.min(4, theme.radius)
-                        color: cogHover.hovered || win.settingsVisible ? "#26262d" : "transparent"
+                        color: cogHover.hovered || win.settingsVisible ? theme.raised : "transparent"
                         Canvas {
+                            readonly property color tint: theme.dim
+                            onTintChanged: requestPaint()
                             anchors.centerIn: parent
-                            width: 14
-                            height: 14
+                            width: 12
+                            height: 12
                             onPaint: {
                                 const ctx = getContext("2d")
                                 ctx.reset()
-                                ctx.fillStyle = "#8b8b96"
+                                // Drawn on a 14px grid, shrunk to fit.
+                                ctx.scale(width / 14, height / 14)
+                                ctx.fillStyle = tint
                                 ctx.beginPath()
                                 const teeth = 8
                                 for (let i = 0; i < teeth * 2; ++i) {
@@ -634,17 +761,21 @@ ApplicationWindow {
             visible: win.settingsVisible
             fontSize: win.fontSize
             fontFamily: win.fontFamily
-            backgroundColor: win.backgroundColor
-            textColor: win.textColor
+            backgroundColor: win.editorBackground
+            textColor: win.editorText
+            themeBackground: win.themeBackground
+            themeText: win.themeText
             onSizeChanged: (size) => win.fontSize = size
             onFamilyPicked: (family) => win.fontFamily = family
-            onBackgroundPicked: (value) => win.backgroundColor = value
-            onTextPicked: (value) => win.textColor = value
+            onBackgroundPicked: (value) => { win.themeBackground = false; win.backgroundColor = value }
+            onTextPicked: (value) => { win.themeText = false; win.textColor = value }
+            onThemeBackgroundPicked: win.themeBackground = true
+            onThemeTextPicked: win.themeText = true
             onResetRequested: {
                 win.fontSize = 12
                 win.fontFamily = "monospace"
-                win.backgroundColor = "#1a1b26"
-                win.textColor = "#c0caf5"
+                win.themeBackground = true
+                win.themeText = true
             }
             onDismissed: { win.settingsVisible = false; win.focusContent() }
         }
@@ -663,6 +794,15 @@ ApplicationWindow {
             function open() { visible = true }
             function close() { visible = false; win.focusContent() }
             onCancelled: { win.pending = null; close() }
+            onDeleteChosen: {
+                const action = win.pending
+                win.pending = null
+                close()
+                // Deleting the open note leaves a new, empty one, so the
+                // action runs as if nothing were unsaved.
+                if (backend.deleteNote(backend.filePath) && action)
+                    action()
+            }
             onDiscardChosen: {
                 const action = win.pending
                 win.pending = null

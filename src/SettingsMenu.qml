@@ -11,6 +11,8 @@ FocusScope {
     property string fontFamily: ""
     property color backgroundColor: "#1a1b26"
     property color textColor: "#c0caf5"
+    property bool themeBackground: true
+    property bool themeText: true
     readonly property var backgrounds: ["#0e0e10", "#000000", "#1a1b26", "#282a36", "#002b36", "#1e1e1e", "#fdf6e3", "#ffffff"]
     readonly property var foregrounds: ["#e6e6ea", "#ffffff", "#c0caf5", "#f8f8f2", "#93a1a1", "#a9b665", "#586e75", "#111111"]
     readonly property var families: [qsTr("Monospace")].concat(backend.monospaceFamilies())
@@ -18,6 +20,8 @@ FocusScope {
     signal familyPicked(string family)
     signal backgroundPicked(color value)
     signal textPicked(color value)
+    signal themeBackgroundPicked()
+    signal themeTextPicked()
     signal resetRequested()
     signal dismissed()
 
@@ -35,9 +39,35 @@ FocusScope {
         id: swatches
         property var colors: []
         property color current
+        // The first swatch is the Omarchy theme's own color, and stays picked
+        // while the editor follows it.
+        property color themeColor
+        property bool following: false
         signal picked(color value)
+        signal themePicked()
         Layout.fillWidth: true
         spacing: 6
+        Rectangle {
+            width: 24
+            height: 24
+            radius: 12
+            color: swatches.themeColor
+            border.width: swatches.following ? 2 : 1
+            border.color: swatches.following ? theme.accent : theme.line
+            // A dot of the accent marks it as the theme's.
+            Rectangle {
+                anchors.centerIn: parent
+                width: 8
+                height: 8
+                radius: 4
+                color: theme.accent
+            }
+            HoverHandler { id: themeSwatchHover; cursorShape: Qt.PointingHandCursor }
+            ToolTip.visible: themeSwatchHover.hovered
+            ToolTip.delay: 400
+            ToolTip.text: qsTr("Follow the Omarchy theme")
+            TapHandler { onTapped: swatches.themePicked() }
+        }
         Repeater {
             model: swatches.colors
             delegate: Rectangle {
@@ -46,8 +76,9 @@ FocusScope {
                 height: 24
                 radius: 12
                 color: modelData
-                border.width: Qt.colorEqual(modelData, swatches.current) ? 2 : 1
-                border.color: Qt.colorEqual(modelData, swatches.current) ? theme.accent : "#3a3a44"
+                readonly property bool chosen: !swatches.following && Qt.colorEqual(modelData, swatches.current)
+                border.width: chosen ? 2 : 1
+                border.color: chosen ? theme.accent : theme.line
                 HoverHandler { cursorShape: Qt.PointingHandCursor }
                 TapHandler { onTapped: swatches.picked(modelData) }
             }
@@ -58,11 +89,11 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: 10
         y: parent.height - height - 34
-        width: 280
+        width: 300
         height: content.implicitHeight + 28
         radius: theme.radius
-        color: "#17171b"
-        border.color: "#2a2a32"
+        color: theme.base
+        border.color: theme.line
 
         MouseArea { anchors.fill: parent }
 
@@ -73,13 +104,13 @@ FocusScope {
             width: parent.width - 28
             spacing: 8
 
-            Label { text: qsTr("Font size"); color: "#8b8b96"; font.pixelSize: 12 }
+            Label { text: qsTr("Font size"); color: theme.dim; font.pixelSize: 12 }
             RowLayout {
                 spacing: 8
                 PlainButton { text: "−"; onClicked: menu.sizeChanged(Math.max(9, menu.fontSize - 1)) }
                 Label {
                     text: menu.fontSize
-                    color: "#e6e6ea"
+                    color: theme.text
                     font.pixelSize: 13
                     horizontalAlignment: Text.AlignHCenter
                     Layout.preferredWidth: 32
@@ -87,7 +118,7 @@ FocusScope {
                 PlainButton { text: "+"; onClicked: menu.sizeChanged(Math.min(40, menu.fontSize + 1)) }
             }
 
-            Label { text: qsTr("Font type"); color: "#8b8b96"; font.pixelSize: 12; Layout.topMargin: 4 }
+            Label { text: qsTr("Font type"); color: theme.dim; font.pixelSize: 12; Layout.topMargin: 4 }
             ComboBox {
                 id: familyBox
                 Layout.fillWidth: true
@@ -111,18 +142,24 @@ FocusScope {
                 onActivated: (i) => menu.familyPicked(i === 0 ? "monospace" : menu.families[i])
             }
 
-            Label { text: qsTr("Background color"); color: "#8b8b96"; font.pixelSize: 12; Layout.topMargin: 4 }
+            Label { text: qsTr("Background color"); color: theme.dim; font.pixelSize: 12; Layout.topMargin: 4 }
             Swatches {
                 colors: menu.backgrounds
                 current: menu.backgroundColor
+                themeColor: theme.editorBackground
+                following: menu.themeBackground
                 onPicked: (value) => menu.backgroundPicked(value)
+                onThemePicked: menu.themeBackgroundPicked()
             }
 
-            Label { text: qsTr("Font color"); color: "#8b8b96"; font.pixelSize: 12; Layout.topMargin: 4 }
+            Label { text: qsTr("Font color"); color: theme.dim; font.pixelSize: 12; Layout.topMargin: 4 }
             Swatches {
                 colors: menu.foregrounds
                 current: menu.textColor
+                themeColor: theme.editorText
+                following: menu.themeText
                 onPicked: (value) => menu.textPicked(value)
+                onThemePicked: menu.themeTextPicked()
             }
 
             PlainButton {

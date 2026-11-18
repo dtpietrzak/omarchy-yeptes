@@ -27,9 +27,9 @@ ScrollView {
             text: view.content
             baseUrl: view.baseUrl
             wrapMode: TextEdit.Wrap
-            color: "#e6e6ea"
+            color: theme.text
             selectionColor: Qt.alpha(theme.accent, 0.35)
-            selectedTextColor: "#ffffff"
+            selectedTextColor: theme.text
             onLinkActivated: (link) => Qt.openUrlExternally(link)
 
             HoverHandler {

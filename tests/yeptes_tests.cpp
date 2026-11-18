@@ -572,6 +572,26 @@ private slots:
         QCOMPARE(theme.accentForeground(), QString("white"));
     }
 
+    void themeReadsPalette()
+    {
+        QTemporaryDir dir;
+        QDir(dir.path()).mkpath("theme");
+        write(dir.path() + "/theme/colors.toml",
+              "mode = \"light\"\naccent = \"#112233\"\nbackground = \"#fafafa\"\n"
+              "foreground = \"#202020\"\ndark_foreground = \"#808080\"\nred = \"not a color\"\n");
+
+        Theme theme(dir.path());
+        QVERIFY(!theme.dark());
+        QCOMPARE(theme.base(), QColor("#fafafa"));
+        QCOMPARE(theme.editorBackground(), QColor("#fafafa"));
+        QCOMPARE(theme.editorText(), QColor("#202020"));
+        QCOMPARE(theme.dim(), QColor("#505050"));
+        // Missing or malformed names keep Yeptes's own colors.
+        QCOMPARE(theme.red(), QColor("#f7768e"));
+        QCOMPARE(theme.chrome(), QColor("#141417"));
+        QVERIFY(!theme.colors().contains("red"));
+    }
+
     void themeFollowsHyprlandRounding()
     {
         QTemporaryDir dir;

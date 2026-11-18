@@ -7,7 +7,7 @@
   "HTML": "HTML",
   "Not saved yet": "Ikke gemt endnu",
   "Ln %1, Col %2": "Ln %1, kol %2",
-  "%1 for shortcuts": "%1 for genveje",
+  "%1 shortcuts": "%1 genveje",
   "Save changes to %1?": "Gem ændringer i %1?",
   "Your changes will be lost if you don't save them.": "Dine ændringer går tabt, hvis du ikke gemmer dem.",
   "Cancel": "Annuller",
@@ -57,7 +57,7 @@
   "The XDG desktop portal file chooser is not available.": "Filvælgeren fra XDG desktop portal er ikke tilgængelig.",
   "Could not listen for the portal file picker response.": "Kunne ikke lytte efter svar fra portalens filvælger.",
   "The portal file picker failed: %1": "Portalens filvælger fejlede: %1",
-  "%n characters": {
+  "%n Chars": {
     "one": "%n tegn",
     "other": "%n tegn"
   },
@@ -81,5 +81,15 @@
   "There is nothing to show as a table yet.": "Der er endnu ikke noget at vise som tabel.",
   "Unsaved changes": "Ikke-gemte ændringer",
   "No changes yet. Every save of this note is recorded here.": "Ingen ændringer endnu. Hver gang noten gemmes, registreres det her.",
-  "No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.": "Ingen ikke-gemte ændringer. Kun Yeptes-noter (.ypts) gemmer en historik over, hvad der er gemt."
+  "No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.": "Ingen ikke-gemte ændringer. Kun Yeptes-noter (.ypts) gemmer en historik over, hvad der er gemt.",
+  "Quick Notes": "Hurtige noter",
+  "There's no text in %1": "Der er ingen tekst i %1",
+  "Do you want to delete this note, or revert it to how it was last saved?": "Vil du slette denne note eller gendanne den, som den sidst blev gemt?",
+  "Delete": "Slet",
+  "Revert": "Gendan",
+  "Search notes": "Søg i noter",
+  "No notes contain “%1”.": "Ingen noter indeholder “%1”.",
+  "Hide notes": "Skjul noter",
+  "Show notes": "Vis noter",
+  "New note (Ctrl+N)": "Ny note (Ctrl+N)"
 }

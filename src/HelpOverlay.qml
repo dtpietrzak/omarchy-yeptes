@@ -7,7 +7,7 @@ import QtQuick.Controls.Material
 Rectangle {
     id: overlay
     signal dismissed()
-    color: Qt.alpha("#0e0e10", 0.88)
+    color: Qt.alpha(theme.scrim, 0.88)
 
     readonly property var shortcuts: [
         { keys: "Ctrl+N", text: qsTr("New note") },
@@ -44,8 +44,8 @@ Rectangle {
         width: Math.min(parent.width - 48, 560)
         height: Math.min(parent.height - 48, content.implicitHeight + 48)
         radius: theme.radius
-        color: "#17171b"
-        border.color: "#2a2a32"
+        color: theme.base
+        border.color: theme.line
 
         Flickable {
             anchors.fill: parent
@@ -64,7 +64,7 @@ Rectangle {
                     text: qsTr("Shortcuts")
                     font.pixelSize: 18
                     font.weight: Font.DemiBold
-                    color: "#e6e6ea"
+                    color: theme.text
                     bottomPadding: 8
                 }
                 Repeater {
@@ -84,7 +84,7 @@ Rectangle {
                             width: parent.width - 206
                             text: modelData.text
                             font.pixelSize: 13
-                            color: "#c9c9d1"
+                            color: theme.subtext
                             wrapMode: Text.Wrap
                         }
                     }

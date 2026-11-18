@@ -25,7 +25,7 @@ FocusScope {
         visible: diff.rows.length === 0
         text: diff.note ? qsTr("No changes yet. Every save of this note is recorded here.")
                         : qsTr("No unsaved changes. Only Yeptes notes (.ypts) keep a history of their saves.")
-        color: "#8b8b96"
+        color: theme.dim
     }
 
     ListView {
@@ -64,17 +64,17 @@ FocusScope {
                     }
                     font.pixelSize: 14
                     font.weight: Font.DemiBold
-                    color: row.modelData.unsaved ? theme.accent : "#e6e6ea"
+                    color: row.modelData.unsaved ? theme.accent : theme.text
                 }
                 Label {
                     text: "+" + (row.modelData.added || 0)
                     font.pixelSize: 13
-                    color: "#9ece6a"
+                    color: theme.green
                 }
                 Label {
                     text: "−" + (row.modelData.removed || 0)
                     font.pixelSize: 13
-                    color: "#f7768e"
+                    color: theme.red
                 }
             }
 
@@ -83,7 +83,7 @@ FocusScope {
                 x: 18
                 anchors.verticalCenter: parent.verticalCenter
                 text: "⋯"
-                color: "#5f5f6a"
+                color: theme.faint
             }
 
             // Code reads left to right whatever the interface language.
@@ -94,8 +94,8 @@ FocusScope {
                 x: 8
                 width: parent.width - 16
                 height: parent.height
-                color: row.kind === "add" ? Qt.alpha("#9ece6a", 0.13)
-                     : row.kind === "remove" ? Qt.alpha("#f7768e", 0.13) : "transparent"
+                color: row.kind === "add" ? Qt.alpha(theme.green, 0.13)
+                     : row.kind === "remove" ? Qt.alpha(theme.red, 0.13) : "transparent"
 
                 Text {
                     x: 6
@@ -103,7 +103,7 @@ FocusScope {
                     anchors.verticalCenter: parent.verticalCenter
                     horizontalAlignment: Text.AlignRight
                     text: row.modelData.oldNumber || ""
-                    color: "#5f5f6a"
+                    color: theme.faint
                     font.family: "monospace"
                     font.pixelSize: diff.fontSize - 2
                 }
@@ -113,7 +113,7 @@ FocusScope {
                     anchors.verticalCenter: parent.verticalCenter
                     horizontalAlignment: Text.AlignRight
                     text: row.modelData.newNumber || ""
-                    color: "#5f5f6a"
+                    color: theme.faint
                     font.family: "monospace"
                     font.pixelSize: diff.fontSize - 2
                 }
@@ -124,7 +124,7 @@ FocusScope {
                     elide: Text.ElideRight
                     textFormat: Text.PlainText
                     text: (row.kind === "add" ? "+ " : row.kind === "remove" ? "- " : "  ") + (row.modelData.text || "")
-                    color: row.kind === "add" ? "#b9f27c" : row.kind === "remove" ? "#ff9aa9" : "#b4b4bd"
+                    color: row.kind === "add" ? theme.brightGreen : row.kind === "remove" ? theme.brightRed : theme.subtext
                     font.family: "monospace"
                     font.pixelSize: diff.fontSize
                 }
