@@ -9,6 +9,7 @@ pkgdesc='A plain text notepad with Markdown, JSON, HTML, table, code, and diff v
 arch=('x86_64' 'aarch64')
 url='https://github.com/dtpietrzak/omarchy-yeptes'
 license=('MIT')
+install='yeptes.install'
 options=('!debug')
 depends=(
   'hicolor-icon-theme'
