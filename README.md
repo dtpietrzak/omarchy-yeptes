@@ -47,6 +47,8 @@ one JSON object per save. The Diff view reads them back, newest first. They
 never show in the text, and **Export** (`Ctrl+E`) writes a copy of the note
 without them.
 
+![The Diff view listing a note's saved changes, newest first](diff-screenshot.png)
+
 ## Quick notes
 
 Notes saved without picking a place go to `~/Documents/Yeptes/`, and the panel
