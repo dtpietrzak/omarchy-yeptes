@@ -11,6 +11,13 @@ FocusScope {
     property bool note: true
     readonly property int lineHeight: Math.round(fontSize * 1.55)
 
+    // A diff line is split on "\n" only, but Text also breaks on these, which
+    // would make a row two lines tall and spill over its neighbors. Show each
+    // one as ↵ instead; a CRLF file's trailing "\r" is just dropped.
+    function shown(text) {
+        return text.replace(/\r$/, "").replace(/[\r\v\f\u0085\u2028\u2029]/g, "↵")
+    }
+
     FontMetrics {
         id: metrics
         font.family: "monospace"
@@ -122,8 +129,9 @@ FocusScope {
                     width: parent.width - x - 8
                     anchors.verticalCenter: parent.verticalCenter
                     elide: Text.ElideRight
+                    maximumLineCount: 1
                     textFormat: Text.PlainText
-                    text: (row.kind === "add" ? "+ " : row.kind === "remove" ? "- " : "  ") + (row.modelData.text || "")
+                    text: (row.kind === "add" ? "+ " : row.kind === "remove" ? "- " : "  ") + diff.shown(row.modelData.text || "")
                     color: row.kind === "add" ? theme.brightGreen : row.kind === "remove" ? theme.brightRed : theme.subtext
                     font.family: "monospace"
                     font.pixelSize: diff.fontSize
