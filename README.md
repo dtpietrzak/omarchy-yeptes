@@ -44,8 +44,19 @@ names it. A new, unsaved note is a Yeptes note; other files stay plain.
 A note also keeps its own history. Each time a changed note is saved, the
 lines that changed are appended to the end of the file, after a marker line,
 one JSON object per save. The Diff view reads them back, newest first. They
-never show in the text, and **Export as…** (`Ctrl+E`) writes a copy of the
-note without them.
+never show in the text, and **Export** (`Ctrl+E`) writes a copy of the note
+without them.
+
+## Quick notes
+
+Notes saved without picking a place go to `~/Documents/Yeptes/`, and the panel
+on the right lists them, newest first. Click one to open it, drag them into
+your own order, and right-click to move one to the trash. The search box at the
+bottom shows only the notes whose name or text contains what you type. The `+`
+starts a new note, and `»` folds the panel into a slim rail.
+
+Emptying a quick note of all its text and then leaving it asks whether to
+delete the note or revert it, rather than saving it blank.
 
 ## Shortcuts
 
@@ -122,8 +133,8 @@ bin/install    # builds the Arch package and installs it (app launcher entry inc
 repository, which builds from a tagged GitHub release.
 
 Needs `qt6-base`, `qt6-declarative`, `qt6-wayland`, and `xdg-desktop-portal`,
-all part of Omarchy. The window follows the Omarchy accent, Hyprland's corner
-rounding, and the language picked under Setup > Language (English, Danish,
+all part of Omarchy. The window follows the Omarchy theme's colors (the editor
+too, until you pick its colors in Settings), Hyprland's corner rounding, and the language picked under Setup > Language (English, Danish,
 German, Spanish, and French so far).
 
 ## License
